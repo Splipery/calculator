@@ -1,0 +1,56 @@
+#container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: larger;
+    font-weight: 900;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#casing {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: lightgray;
+    max-width: 400px;
+    margin: 200px;
+}
+
+#keypad{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+#screen {
+    height: 10px;
+    margin: 5px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: papayawhip;
+    text-align: right;
+    padding: 25px;
+    font-size: 25px;
+}
+
+#functions {
+    display: flex;
+}
+
+.key, .funcKey{
+    padding: 20px;
+    margin: 5px;
+    text-align: center;
+    flex: 1;
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: gray;
+}
+
+.funcKey {
+    background-color: orange;
+}
+
+.op {
+    background-color: palegoldenrod;
+}
