@@ -1,75 +1,81 @@
 const screen = document.querySelector('#screen');
-let active = [];
+let active = 0;
 let targetVal = 0;
 let operator = '';
+let toDisplay = '0';
 
 function getInput(e){
     let inputValue = e.target.innerText;
-    console.log("INPUT: " + inputValue);
+    if(Number.isInteger(inputValue*1) || inputValue === '.'){
+        if(toDisplay === '0') toDisplay = '';
+        if(toDisplay.includes('.') && inputValue === '.') inputValue = '';
 
-    if(Number.isInteger(inputValue*1)){
-        updateDisplay(inputValue);
-    } else if (inputValue === '.') {
-        updateDisplay(inputValue);
-    } else if (inputValue === '=') {
-        screen.textContent = operate(operator, targetVal, active.join(''));
-        operator = '';
-    } else if (inputValue === 'AC') {
-        active = [];
-        targetVal = 0;
-        updateDisplay();
-    } else if(inputValue === 'Back') {
-        let temp = active.pop();
-        console.log(active);
-        updateDisplay();
-    } else {
+        toDisplay += inputValue;
+        active = toDisplay * 1;
+        updateDisplay(active);
+    } else if (inputValue === "Back") {
+        toDisplay = toDisplay.slice(0, -1);
+        if(toDisplay === ''){
+            toDisplay = '0';
+        }
+        active = toDisplay * 1;
+        updateDisplay(active);
+    } else if('+/*-'.includes(inputValue)){
         setOperator(inputValue);
+    } else if(inputValue === '='){
+        calculate();
+    } else if(inputValue === 'AC'){
+        active = 0;
+        targetVal = 0;
+        operator = '';
+        toDisplay = '0';
+        updateDisplay(targetVal);
     }
 }
 
-function updateDisplay(inputValue) {
-    active.push(inputValue);
-    screen.textContent = active.join('');
-}
-
-function setOperator(inputValue){
-    operator = inputValue;
-    if(active.length >= 1){
-        targetVal = active.join('') * 1;
-        active = [];
-        updateDisplay();
+function updateDisplay(displayValue){
+    if(toDisplay.length >= 12){
+        toDisplay = displayValue.toPrecision(12).toString();
+    } else {
+        toDisplay = displayValue.toString();
     }
+    screen.textContent = toDisplay;
 }
 
-function operate(operator, a = 0, b = 0){
-    a = a * 1;
-    b = b * 1;
-    let c = 0;
-    active = [];
+function calculate(){
     switch(operator){
-        case "+":
-            c = a + b;
+        case '+':
+            targetVal = targetVal + active;
             break;
-        case "-":
-            c = a - b;
+        case '-':
+            targetVal = targetVal - active;
             break;
-        case "*":
-            c = a * b;
+        case '*':
+            targetVal = targetVal * active;
             break;
-        case "/":
-            if(b !== 0) {
-                c = a / b;
-                
+        case '/':
+            if(active === 0){
+                screen.textContent = "ERROR#DIV/0";
+                return;
             } else {
-                c =  "Cannot divide by zero."
+                targetVal = targetVal / active;
             }
             break;
-        default:
-            return a;
     }
-    targetVal = c;
-    return c;
+    if(targetVal === 0) targetVal = active;
+    updateDisplay(targetVal);
 }
+
+function setOperator(op){
+    operator = op;
+    if(toDisplay != '0'){
+        targetVal = toDisplay * 1;
+        toDisplay = '0';
+    }
+    updateDisplay(toDisplay);
+    active = 0;
+}
+
 
 const keys = document.querySelectorAll('.key');
 keys.forEach(key => key.addEventListener('click', getInput));
@@ -79,3 +85,5 @@ function logKey(e){
 }
 
 window.addEventListener('keydown', logKey);
+
+setOperator();
