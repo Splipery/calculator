@@ -7,12 +7,15 @@ let toDisplay = '0';
 function getInput(e){
     let inputValue = e.target.innerText;
     if(Number.isInteger(inputValue*1) || inputValue === '.'){
-        if(toDisplay === '0') toDisplay = '';
+        if(toDisplay === '0' && inputValue !== '.') toDisplay = '';
         if(toDisplay.includes('.') && inputValue === '.') inputValue = '';
-
         toDisplay += inputValue;
-        active = toDisplay * 1;
-        updateDisplay(active);
+        if(inputValue === '.') {
+            active = toDisplay.slice(0, -1) * 1;
+        } else {        
+            active = toDisplay * 1;
+        }
+        updateDisplay(toDisplay);
     } else if (inputValue === "Back") {
         toDisplay = toDisplay.slice(0, -1);
         if(toDisplay === ''){
@@ -34,7 +37,7 @@ function getInput(e){
 }
 
 function updateDisplay(displayValue){
-    if(toDisplay.length >= 12){
+    if(toDisplay.length >= 10){
         toDisplay = displayValue.toPrecision(12).toString();
     } else {
         toDisplay = displayValue.toString();
@@ -42,38 +45,53 @@ function updateDisplay(displayValue){
     screen.textContent = toDisplay;
 }
 
+function add(a, b){ return a + b;}
+
+function subtract(a, b){ return a - b;}
+
+function multiply(a, b){ return a * b; }
+
+function divide(a, b){ 
+    return a / b; 
+}
+
 function calculate(){
     switch(operator){
         case '+':
-            targetVal = targetVal + active;
+            targetVal = add(targetVal, active);
             break;
         case '-':
-            targetVal = targetVal - active;
+            targetVal = subtract(targetVal, active);
             break;
         case '*':
-            targetVal = targetVal * active;
+            targetVal = multiply(targetVal, active);
             break;
         case '/':
             if(active === 0){
-                screen.textContent = "ERROR#DIV/0";
+                alert("You can't divide by 0, you fool.")
+                updateDisplay(active);
+                //screen.textContent = "ERROR#DIV/0";
                 return;
             } else {
-                targetVal = targetVal / active;
+                targetVal = divide(targetVal, active);
             }
             break;
     }
     if(targetVal === 0) targetVal = active;
+    active = 0;
     updateDisplay(targetVal);
 }
 
 function setOperator(op){
+    if(active !== 0) {
+        calculate();
+    }
     operator = op;
     if(toDisplay != '0'){
         targetVal = toDisplay * 1;
         toDisplay = '0';
     }
     updateDisplay(toDisplay);
-    active = 0;
 }
 
 

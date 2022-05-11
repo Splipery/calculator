@@ -1,5 +1,10 @@
+h1 {
+    margin: 20px;
+    font-size: 48px;;
+}
 #container{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -14,12 +19,14 @@
     border-radius: 10px;
     background-color: lightgray;
     max-width: 400px;
-    margin: 200px;
+    margin: 50px;
+    resize: none;
 }
 
 #keypad{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    resize: none;
 }
 
 #screen {
@@ -31,6 +38,7 @@
     text-align: right;
     padding: 25px;
     font-size: 25px;
+    max-width: 380px;
 }
 
 #functions {
