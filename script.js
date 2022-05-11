@@ -1,8 +1,10 @@
 const screen = document.querySelector('#screen');
+
 let active = 0;
 let targetVal = 0;
 let operator = '';
 let toDisplay = '0';
+let shifted = false;
 
 function getInput(e){
     let inputValue = e.target.innerText;
@@ -99,7 +101,17 @@ const keys = document.querySelectorAll('.key');
 keys.forEach(key => key.addEventListener('click', getInput));
 
 function logKey(e){
+    console.log(e.shiftKey);
     console.log(e.keyCode);
+    let code = e.keyCode;
+
+    if(e.shiftKey){
+        code += "SHIFT";
+    }
+
+    const key = document.querySelector(`.key[data-key="${code}"]`) || document.querySelector(`.key[data-key2="${code}"]`);
+    if(!key) return;
+    key.click();
 }
 
 window.addEventListener('keydown', logKey);
